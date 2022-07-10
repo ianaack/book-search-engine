@@ -92,6 +92,7 @@ const LoginForm = () => {
 					Submit
 				</Button>
 			</Form>
+			{error && <div>There was an issue with Logging In.</div>}
 		</>
 	);
 };

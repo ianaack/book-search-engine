@@ -158,6 +158,7 @@ const SearchBooks = () => {
 					})}
 				</CardColumns>
 			</Container>
+			{error && <div>There was an issue with viewing books</div>}
 		</>
 	);
 };

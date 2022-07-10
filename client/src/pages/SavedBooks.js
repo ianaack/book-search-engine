@@ -85,6 +85,7 @@ const SavedBooks = () => {
 					})}
 				</CardColumns>
 			</Container>
+			{error && <div>There was an issue with viewing your books</div>}
 		</>
 	);
 };
