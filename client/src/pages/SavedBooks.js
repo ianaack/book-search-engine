@@ -6,19 +6,21 @@ import {
 	Card,
 	Button,
 } from "react-bootstrap";
-import { useQuery, useMutation } from "@apollo/client";
-import { GET_ME } from "../utils/queries";
-import { REMOVE_BOOK } from "../utils/mutations";
+
 import Auth from "../utils/auth";
 import { removeBookId } from "../utils/localStorage";
 
+import { useQuery, useMutation } from "@apollo/client";
+import { GET_ME } from "../utils/queries";
+import { REMOVE_BOOK } from "../utils/mutations";
+
 const SavedBooks = () => {
 	const { loading, data } = useQuery(GET_ME);
+
 	const [removeBook, { error }] = useMutation(REMOVE_BOOK);
 
 	const userData = data?.me || {};
 
-	// create function that accepts the book's mongo _id value as param and deletes the book from the database
 	const handleDeleteBook = async (bookId) => {
 		const token = Auth.loggedIn() ? Auth.getToken() : null;
 
@@ -33,6 +35,7 @@ const SavedBooks = () => {
 
 			// upon success, remove book's id from localStorage
 			removeBookId(bookId);
+			document.getElementById(bookId).remove();
 		} catch (e) {
 			console.error(e);
 		}
@@ -59,9 +62,9 @@ const SavedBooks = () => {
 						: "You have no saved books!"}
 				</h2>
 				<CardColumns>
-					{userData.savedBooks.map((book) => {
+					{userData.savedBooks.map((book, key) => {
 						return (
-							<Card key={book.bookId} border="dark">
+							<Card key={key} id={book.bookId} border="dark">
 								{book.image ? (
 									<Card.Img
 										src={book.image}
@@ -73,6 +76,9 @@ const SavedBooks = () => {
 									<Card.Title>{book.title}</Card.Title>
 									<p className="small">Authors: {book.authors}</p>
 									<Card.Text>{book.description}</Card.Text>
+									<a href={book.link} target="_blank" rel="noreferrer">
+										{book.link == null ? "No Link Available" : "Link to Google"}
+									</a>
 									<Button
 										className="btn-block btn-danger"
 										onClick={() => handleDeleteBook(book.bookId)}
@@ -84,8 +90,8 @@ const SavedBooks = () => {
 						);
 					})}
 				</CardColumns>
+				{error && <div>There was an issue with viewing your books</div>}
 			</Container>
-			{error && <div>There was an issue with viewing your books</div>}
 		</>
 	);
 };
