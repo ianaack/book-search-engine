@@ -57,6 +57,7 @@ const SearchBooks = () => {
 				description: book.volumeInfo.description,
 				image: book.volumeInfo.imageLinks?.thumbnail || "",
 			}));
+			console.log(bookData);
 
 			setSearchedBooks(bookData);
 			setSearchInput("");
